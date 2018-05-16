@@ -3,7 +3,7 @@ import sys
 
 
 def is_valid_email(email: str):
-    email_regex = re.compile('[^@]+@[^@]+\.[^@]+')
+    email_regex = re.compile('[^@]+@[^@]+(\.[^@])+')
     return email_regex.match(email)
 
 
