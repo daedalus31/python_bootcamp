@@ -8,13 +8,13 @@ def is_valid_email(email: str):
 
 
 def clean_emails_set(input_file):
-    result = []
+    result = set()
     with open(input_file) as inp:
         for email in inp:
             email = email.strip().lower()
             if is_valid_email(email):
-                result.append(email)
-    return set(result)
+                result.add(email)
+    return result
 
 
 def write_clean_list(emails: set, output_file: str):
