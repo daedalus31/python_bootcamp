@@ -1,39 +1,59 @@
 import json
 
 
+class Employee:
+    def __init__(self, firstname, lastname, birthyear, salary):
+        self.firstname = firstname
+        self.lastname = lastname
+        self.birthyear = birthyear
+        self.salary = salary
+
+    @classmethod
+    def from_dict(cls, data_dict):
+        return cls(firstname=data_dict['firstname'], lastname=data_dict['lastname'],
+                   birthyear=data_dict['birthyear'], salary=data_dict['salary'])
+
+    def to_dict(self):
+        return {'firstname': self.firstname,
+                'lastname': self.lastname,
+                'birthyear': self.birthyear,
+                'salary': self.salary}
+
+
 class EmployeeDataBase:
     def __init__(self, data_file):
         self._data_file = data_file
-        self._employees = []
 
-    def load_employees(self):
+    def _load_employees(self):
         try:
             with open(self._data_file) as data:
-                self._employees = json.load(data)
+                es = json.load(data)
+                return [Employee.from_dict(e) for e in es]
         except FileNotFoundError:
-            pass
+            return []
 
     def print_employees(self):
-        self.load_employees()
-        if not self._employees:
+        employees = self._load_employees()
+        if not employees:
             print(f'Plik {self._data_file} nie istnieje lub jest pusty!')
         else:
-            for i, e in enumerate(self._employees, start=1):
+            for i, e in enumerate(employees, start=1):
                 print(
-                    f'[{i}] {e["firstname"]} {e["lastname"]} - rok: {e["birthyear"]}, pensja: {e["salary"]:.2f}')
+                    f'[{i}] {e.firstname} {e.lastname} - rok: {e.birthyear}, pensja: {e.salary:.2f}')
 
     def add_employee(self, employee_dict):
-        self.load_employees()
-        self._employees.append(employee_dict)
+        new_employee = Employee.from_dict(employee_dict)
+        employees = self._load_employees()
+        employees.append(new_employee)
         with open(self._data_file, 'w') as data:
-            json.dump(self._employees, data)
+            json.dump([e.to_dict() for e in employees], data)
 
     def remove_employee(self, index):
-        self.load_employees()
+        employees = self._load_employees()
         try:
-            del self._employees[index]
+            del employees[index]
             with open(self._data_file, 'w') as data:
-                json.dump(self._employees, data)
+                json.dump([e.to_dict() for e in employees], data)
         except IndexError:
             print(f'Pracownik o indeksie {index + 1} nie istnieje!')
 
