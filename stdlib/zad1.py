@@ -28,12 +28,21 @@ class EmployeeDataBase:
         with open(self._data_file, 'w') as data:
             json.dump(self._employees, data)
 
+    def remove_employee(self, index):
+        self.load_employees()
+        try:
+            del self._employees[index]
+            with open(self._data_file, 'w') as data:
+                json.dump(self._employees, data)
+        except IndexError:
+            print(f'Pracownik o indeksie {index + 1} nie istnieje!')
+
 
 if __name__ == '__main__':
     data_file = 'employee_data.json'
     db = EmployeeDataBase(data_file)
 
-    action = input('Co chcesz zrobić? [dodaj - d/wypisz - w] ')
+    action = input('Co chcesz zrobić? [dodaj - d/wypisz - w/usuń - u] ')
     if action == 'd':
         firstname = input('Imię: ')
         lastname = input('Nazwisko: ')
@@ -44,5 +53,8 @@ if __name__ == '__main__':
         db.add_employee(emp)
     elif action == 'w':
         db.print_employees()
+    elif action == 'u':
+        index = int(input('Podaj indeks pracownika do usunięcia: ')) - 1
+        db.remove_employee(index)
     else:
         print('Niewłaściwa komenda!')
