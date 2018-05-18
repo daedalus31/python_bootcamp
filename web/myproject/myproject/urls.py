@@ -16,6 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from myapp.views import hello_view, arithmetic_view
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('hello/<name>/', hello_view),
+    path('operation/<operation>/<num1>/<num2>/', arithmetic_view)
 ]
