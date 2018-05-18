@@ -10,8 +10,10 @@ def arithmetic_view(request, operation, num1, num2):
     num1 = int(num1)
     num2 = int(num2)
     if operation == 'add':
-        return HttpResponse(f'{num1 + num2}')
+        res = num1 + num2
     elif operation == 'sub':
-        return HttpResponse(f'{num1 - num2}')
+        res = num1 - num2
     else:
-        return HttpResponse('Bad operation!')
+        res = 'Bad operation!'
+    return render(request=request, template_name='operacja.html',
+                  context={'wynik': res})
